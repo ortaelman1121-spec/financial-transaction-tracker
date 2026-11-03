@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class Main {
 
@@ -13,7 +15,13 @@ public class Main {
         String line;
         reader.readLine();
         while ((line = reader.readLine()) != null) {
-            System.out.println(line);
+
+            String[] parts = line.split("\\|");
+            double amount = Double.parseDouble(parts[4]);
+            System.out.println(amount);
+            Transaction t = new Transaction(LocalDate.parse(parts[0]), LocalTime.parse(parts[1]),parts[2],parts[3],amount);
+            System.out.println(parts[3]);
+
         }
 
 
