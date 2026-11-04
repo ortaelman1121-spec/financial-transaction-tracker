@@ -70,9 +70,35 @@ public class Main {
                     System.out.println("vendor: " + vendor);
                     break;
 
-                case "P":
-                    System.out.println("Make Payment selected");
+                case "P": {
+                    System.out.print("Enter payment description: ");
+                    String paymentDescription = scanner.nextLine();
+
+                    System.out.print("Enter vendor: ");
+                    String paymentVendor = scanner.nextLine();
+
+                    System.out.print("Enter payment amount: ");
+                    String paymentAmountText = scanner.nextLine();
+
+                    double paymentAmount = Double.parseDouble(paymentAmountText);
+                    paymentAmount = -Math.abs(paymentAmount);
+                    Transaction payment = new Transaction(
+                            LocalDate.now(),
+                            LocalTime.now(),
+                            paymentDescription,
+                            paymentVendor,
+                            paymentAmount
+                    );
+
+                    System.out.println("payment amount: " + paymentAmount);
+
+                    System.out.println("Description: " + paymentDescription);
+                    System.out.println("vendor: " + paymentVendor);
+
+                    System.out.println("Payment: " + payment.getDescription());
+                    System.out.println("Amount: " + payment.getAmount());
                     break;
+                }
 
                 case "L":
                     System.out.println("Ledger selected");
