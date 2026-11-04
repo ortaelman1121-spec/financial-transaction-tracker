@@ -4,8 +4,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Locale;
+import java.io.FileWriter;
 
 public class Main {
 
@@ -34,7 +37,37 @@ public class Main {
 
             switch (choice) {
                 case "D":
-                    System.out.println("Add Deposit selected");
+                    System.out.print("Enter description: ");
+                    String description = scanner.nextLine();
+
+                    System.out.print("Enter vendor: ");
+                    String vendor = scanner.nextLine();
+                    System.out.print("Enter amount: ");
+                    String amountText = scanner.nextLine();
+                    double amount = Double.parseDouble(amountText);
+                    Transaction deposit = new Transaction(
+                            LocalDate.now(),
+                            LocalTime.now(),
+                            description,
+                            vendor,
+                            amount
+                    );
+                    String csvLine = deposit.getDate() + "|" +
+                            deposit.getTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "|" +
+                            deposit.getDescription() + "|" +
+                            deposit.getVendor() + "|" +
+                            String.format(Locale.US, "%.2f", deposit.getAmount());
+                    System.out.println(csvLine);
+                    try(FileWriter writer = new FileWriter("transactions.csv", true)) {
+                        writer.write(csvLine + System.lineSeparator());
+                    }
+                        transactions.add(deposit);
+                        System.out.println("Deposit saved successfully!");
+
+                    System.out.println("Created deposit: " + deposit.getDescription());
+                    System.out.println("Amount: " + amount);
+                    System.out.println("Description: " + description);
+                    System.out.println("vendor: " + vendor);
                     break;
 
                 case "P":
