@@ -89,6 +89,24 @@ public class Main {
                             paymentVendor,
                             paymentAmount
                     );
+                    String paymentCsvLine = payment.getDate() + "|" +
+                            payment.getTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "|" +
+                            payment.getDescription() + "|" +
+                            payment.getVendor() + "|" +
+                            String.format(Locale.US, "%.2f", payment.getAmount());
+                    System.out.println("CSV location: " +
+                            new java.io.File("transactions.csv").getAbsolutePath());
+                    try (FileWriter writer = new FileWriter("tranksactions.csv", true)){
+                        writer.write(paymentCsvLine + System.lineSeparator());
+
+                        transactions.add(payment);
+
+                        System.out.println("payment saved successfully!");
+
+                    } catch (IOException e){
+                        System.out.println("error saving payment: " + e.getMessage());
+
+                    }
 
                     System.out.println("payment amount: " + paymentAmount);
 
