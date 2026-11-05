@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Locale;
 import java.io.FileWriter;
+import java.util.Comparator;
 
 public class Main {
 
@@ -58,11 +59,11 @@ public class Main {
                             deposit.getVendor() + "|" +
                             String.format(Locale.US, "%.2f", deposit.getAmount());
                     System.out.println(csvLine);
-                    try(FileWriter writer = new FileWriter("transactions.csv", true)) {
+                    try (FileWriter writer = new FileWriter("transactions.csv", true)) {
                         writer.write(csvLine + System.lineSeparator());
                     }
-                        transactions.add(deposit);
-                        System.out.println("Deposit saved successfully!");
+                    transactions.add(deposit);
+                    System.out.println("Deposit saved successfully!");
 
                     System.out.println("Created deposit: " + deposit.getDescription());
                     System.out.println("Amount: " + amount);
@@ -96,14 +97,14 @@ public class Main {
                             String.format(Locale.US, "%.2f", payment.getAmount());
                     System.out.println("CSV location: " +
                             new java.io.File("transactions.csv").getAbsolutePath());
-                    try (FileWriter writer = new FileWriter("tranksactions.csv", true)){
+                    try (FileWriter writer = new FileWriter("transactions.csv", true)) {
                         writer.write(paymentCsvLine + System.lineSeparator());
 
                         transactions.add(payment);
 
                         System.out.println("payment saved successfully!");
 
-                    } catch (IOException e){
+                    } catch (IOException e) {
                         System.out.println("error saving payment: " + e.getMessage());
 
                     }
@@ -118,9 +119,76 @@ public class Main {
                     break;
                 }
 
-                case "L":
-                    System.out.println("Ledger selected");
+                case "L": {
+                    transactions.sort(Comparator.comparing(Transaction::getDate)
+                            .thenComparing(Transaction::getTime)
+                            .reversed());
+
+                    while (true) {
+                        System.out.println("Ledger selected");
+                        System.out.println("A) All Transactions");
+                        System.out.println("D) Deposits");
+                        System.out.println("P) Payments");
+                        System.out.println("R) Reports");
+                        System.out.println("H) Home");
+
+                        System.out.print("Enter your choice: ");
+                        String ledgerChoice = scanner.nextLine();
+
+                        if (ledgerChoice.equalsIgnoreCase("H")) {
+                            break;
+                        }
+
+                        switch (ledgerChoice.toUpperCase()) {
+                            case "A":
+                                System.out.println("All Transactions");
+
+                                for (Transaction t : transactions) {
+                                    System.out.println(
+                                            t.getDate() + " | " +
+                                            t.getTime() + " | " +
+                                            t.getDescription() + " | " +
+                                            t.getVendor() + " | " +
+                                            t.getAmount()
+                                    );
+                                }
+                                break;
+                            case "D":
+                                System.out.println("Deposists: ");
+
+                                for (Transaction t : transactions) {
+                                    if (t.getAmount() > 0) {
+                                        System.out.println(
+                                        t.getDate() + " | " +
+                                        t.getTime() + " | " +
+                                        t.getDescription() + " | " +
+                                        t.getVendor() + " | " +
+                                        t.getAmount()
+                                        );
+
+                                    }
+                                }
+                            case "P":
+                                System.out.println("Payments: ");
+
+                                for (Transaction t : transactions) {
+                                    if(t.getAmount() < 0) {
+                                        System.out.println(
+                                                t.getDate() + " | " +
+                                                        t.getTime() + " | " +
+                                                        t.getDescription() + " | " +
+                                                        t.getVendor() + " | " +
+                                                        t.getAmount()
+                                        );
+                                    }
+                                }
+                                break;
+                        }
+                    }
                     break;
+                }
+
+
 
                 case "X":
                     System.out.println("Goodbye");
@@ -129,7 +197,6 @@ public class Main {
                 default:
                     System.out.println("Invalid choice! Try again");
                     break;
-
 
 
             }
